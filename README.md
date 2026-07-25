@@ -203,18 +203,6 @@ docs/                     design, methodology, findings template, résumé entry
 .github/workflows/        CPU CI
 ```
 
-## Using the project on a résumé
-
-Do not claim speedups until you have reproduced and saved them on hardware you can identify. A conservative résumé entry is provided in [docs/resume-entry.md](docs/resume-entry.md).
-
-The strongest project evidence is not the existence of the repository. It is a tagged release containing:
-
-- actual benchmark outputs from named hardware,
-- profiler traces,
-- a graph-break investigation,
-- a Triton correctness/performance result,
-- and a written explanation of at least one result that contradicted your initial expectation.
-
 ## Official technical references
 
 - PyTorch compiler overview: https://docs.pytorch.org/docs/main/user_guide/torch_compiler/torch.compiler.html
