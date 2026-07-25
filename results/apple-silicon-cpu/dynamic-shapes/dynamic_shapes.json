@@ -1,0 +1,76 @@
+{
+  "dynamic": true,
+  "batch_size": 1,
+  "dtype": "float32",
+  "device": "cpu",
+  "lengths": [
+    32,
+    64,
+    128,
+    64,
+    256,
+    128
+  ],
+  "observations": [
+    {
+      "index": 0,
+      "sequence_length": 32,
+      "first_call_ms": 6867.454916,
+      "repeat_call_ms": 3.363208,
+      "dynamo_stats": {
+        "calls_captured": 396,
+        "unique_graphs": 1
+      }
+    },
+    {
+      "index": 1,
+      "sequence_length": 64,
+      "first_call_ms": 3.914458,
+      "repeat_call_ms": 3.358125,
+      "dynamo_stats": {
+        "calls_captured": 396,
+        "unique_graphs": 1
+      }
+    },
+    {
+      "index": 2,
+      "sequence_length": 128,
+      "first_call_ms": 5.136916,
+      "repeat_call_ms": 4.290667,
+      "dynamo_stats": {
+        "calls_captured": 396,
+        "unique_graphs": 1
+      }
+    },
+    {
+      "index": 3,
+      "sequence_length": 64,
+      "first_call_ms": 3.236292,
+      "repeat_call_ms": 3.263959,
+      "dynamo_stats": {
+        "calls_captured": 396,
+        "unique_graphs": 1
+      }
+    },
+    {
+      "index": 4,
+      "sequence_length": 256,
+      "first_call_ms": 7.359959,
+      "repeat_call_ms": 5.035042,
+      "dynamo_stats": {
+        "calls_captured": 396,
+        "unique_graphs": 1
+      }
+    },
+    {
+      "index": 5,
+      "sequence_length": 128,
+      "first_call_ms": 3.407083,
+      "repeat_call_ms": 3.481459,
+      "dynamo_stats": {
+        "calls_captured": 396,
+        "unique_graphs": 1
+      }
+    }
+  ]
+}

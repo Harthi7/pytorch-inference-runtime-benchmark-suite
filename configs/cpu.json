@@ -1,0 +1,26 @@
+{
+  "name": "cpu-runtime-comparison",
+  "model": {
+    "vocab_size": 8192,
+    "max_seq_len": 256,
+    "d_model": 256,
+    "n_heads": 8,
+    "n_layers": 4,
+    "mlp_ratio": 4.0
+  },
+  "benchmark": {
+    "batch_sizes": [1, 4],
+    "sequence_lengths": [64, 128, 256],
+    "modes": ["eager", "compile", "onnx"],
+    "device": "cpu",
+    "dtype": "float32",
+    "warmup_iterations": 5,
+    "benchmark_iterations": 20,
+    "compile_mode": "default",
+    "fullgraph": false,
+    "dynamic": false,
+    "correctness_atol": 0.0001,
+    "correctness_rtol": 0.001,
+    "seed": 7
+  }
+}

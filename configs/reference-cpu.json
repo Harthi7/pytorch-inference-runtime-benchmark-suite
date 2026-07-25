@@ -1,0 +1,26 @@
+{
+  "name": "reference-cpu-compiler-smoke",
+  "model": {
+    "vocab_size": 256,
+    "max_seq_len": 16,
+    "d_model": 32,
+    "n_heads": 4,
+    "n_layers": 1,
+    "mlp_ratio": 2.0
+  },
+  "benchmark": {
+    "batch_sizes": [1],
+    "sequence_lengths": [8],
+    "modes": ["eager", "compile"],
+    "device": "cpu",
+    "dtype": "float32",
+    "warmup_iterations": 1,
+    "benchmark_iterations": 5,
+    "compile_mode": "default",
+    "fullgraph": false,
+    "dynamic": false,
+    "correctness_atol": 0.0001,
+    "correctness_rtol": 0.001,
+    "seed": 7
+  }
+}

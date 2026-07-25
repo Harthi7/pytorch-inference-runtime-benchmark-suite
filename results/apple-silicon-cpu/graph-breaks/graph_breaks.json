@@ -1,0 +1,28 @@
+{
+  "broken": {
+    "explain": {
+      "graph_count": 2,
+      "graph_break_count": 1,
+      "op_count": 55,
+      "break_reasons": [
+        "Unsupported Tensor.item() call with capture_scalar_outputs=False\n  Explanation: Dynamo does not support tracing `Tensor.item()` with config.capture_scalar_outputs=False.\n  Hint: Set `torch._dynamo.config.capture_scalar_outputs = True` or `export TORCHDYNAMO_CAPTURE_SCALAR_OUTPUTS=1` to include these operations in the captured graph.\n\n  Developer debug context: call_method TensorVariable() item () {}\n\n For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb0124.html"
+      ]
+    },
+    "strict_compile": {
+      "status": "failed",
+      "error": "Unsupported: Unsupported Tensor.item() call with capture_scalar_outputs=False\n  Explanation: Dynamo does not support tracing `Tensor.item()` with config.capture_scalar_outputs=False.\n  Hint: Set `torch._dynamo.config.capture_scalar_outputs = True` or `export TORCHDYNAMO_CAPTURE_SCALAR_OUTPUTS=1` to include these operations in the captured graph.\n\n  Developer debug context: call_method TensorVariable() item () {}\n\n For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb0124.html\n\nfrom user code:\n   File \"/Users/abdullah/Downloads/pytorch-inference-runtime-benchmark-suite/src/ml_runtime_bench/diagnostics.py\", line 22, in forward\n    python_scalar = input_ids.float().mean().item()\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\nSet TORCHDYNAMO_VERBOSE=1 for the internal stack trace (please do this especially if you're reporting a bug to PyTorch). For even more developer context, set TORCH_LOGS=\"+dynamo\"\n"
+    }
+  },
+  "fixed": {
+    "explain": {
+      "graph_count": 1,
+      "graph_break_count": 0,
+      "op_count": 55,
+      "break_reasons": []
+    },
+    "strict_compile": {
+      "status": "success",
+      "error": null
+    }
+  }
+}

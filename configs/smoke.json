@@ -1,0 +1,21 @@
+{
+  "name": "cpu-smoke",
+  "model": {
+    "vocab_size": 2048,
+    "max_seq_len": 64,
+    "d_model": 64,
+    "n_heads": 4,
+    "n_layers": 1,
+    "mlp_ratio": 2.0
+  },
+  "benchmark": {
+    "batch_sizes": [1],
+    "sequence_lengths": [16],
+    "modes": ["eager"],
+    "device": "cpu",
+    "dtype": "float32",
+    "warmup_iterations": 1,
+    "benchmark_iterations": 3,
+    "seed": 7
+  }
+}

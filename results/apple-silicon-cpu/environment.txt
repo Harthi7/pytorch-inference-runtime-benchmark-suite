@@ -1,0 +1,12 @@
+Benchmark environment
+=====================
+      Model Name: MacBook Pro
+      Model Identifier: Mac15,11
+      Chip: Apple M3 Max
+      Memory: 36 GB
+ProductName:		macOS
+ProductVersion:		26.5.1
+BuildVersion:		25F80
+Python 3.12.13
+PyTorch: 2.13.0
+ONNX Runtime: 1.27.0

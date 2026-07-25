@@ -1,0 +1,546 @@
+{
+  "results": [
+    {
+      "batch_size": 1,
+      "cold_start_ms": 3.034042,
+      "correctness_max_abs_error": 0.0,
+      "device": "cpu",
+      "dtype": "float32",
+      "error": null,
+      "latency": {
+        "max_ms": 2.141584,
+        "mean_ms": 2.00009165,
+        "min_ms": 1.927875,
+        "p50_ms": 1.988687,
+        "p95_ms": 2.1067494,
+        "stdev_ms": 0.05460131301010533
+      },
+      "mode": "eager",
+      "peak_memory_mb": 362.375,
+      "runtime_metadata": {},
+      "sequence_length": 64,
+      "setup_ms": 0.000667,
+      "status": "ok",
+      "throughput_tokens_per_second": 31998.533667194704
+    },
+    {
+      "batch_size": 1,
+      "cold_start_ms": 1004.636,
+      "correctness_max_abs_error": 1.0728836059570312e-06,
+      "device": "cpu",
+      "dtype": "float32",
+      "error": null,
+      "latency": {
+        "max_ms": 2.334791,
+        "mean_ms": 2.2588811499999997,
+        "min_ms": 2.202375,
+        "p50_ms": 2.2575000000000003,
+        "p95_ms": 2.3046294499999997,
+        "stdev_ms": 0.037304413209799984
+      },
+      "mode": "compile",
+      "peak_memory_mb": 497.734375,
+      "runtime_metadata": {
+        "backend": "inductor",
+        "compile_mode": "default",
+        "dynamic": false,
+        "fullgraph": false
+      },
+      "sequence_length": 64,
+      "setup_ms": 655.073125,
+      "status": "ok",
+      "throughput_tokens_per_second": 28332.610593523263
+    },
+    {
+      "batch_size": 1,
+      "cold_start_ms": 2.445916,
+      "correctness_max_abs_error": 1.2814998626708984e-06,
+      "device": "cpu",
+      "dtype": "float32",
+      "error": null,
+      "latency": {
+        "max_ms": 1.849708,
+        "mean_ms": 1.8010104500000002,
+        "min_ms": 1.713958,
+        "p50_ms": 1.804167,
+        "p95_ms": 1.8291642499999998,
+        "stdev_ms": 0.02734716441146135
+      },
+      "mode": "onnx",
+      "peak_memory_mb": 617.625,
+      "runtime_metadata": {
+        "dynamic": false,
+        "model_path": "results/cpu-warm-cache/artifacts/onnx-b1-s64/model.onnx",
+        "providers": [
+          "CPUExecutionProvider"
+        ],
+        "timing_scope": "session.run with NumPy host input/output"
+      },
+      "sequence_length": 64,
+      "setup_ms": 1066.800125,
+      "status": "ok",
+      "throughput_tokens_per_second": 35535.60724758704
+    },
+    {
+      "batch_size": 1,
+      "cold_start_ms": 3.88125,
+      "correctness_max_abs_error": 0.0,
+      "device": "cpu",
+      "dtype": "float32",
+      "error": null,
+      "latency": {
+        "max_ms": 3.222709,
+        "mean_ms": 3.11703755,
+        "min_ms": 3.013,
+        "p50_ms": 3.1310000000000002,
+        "p95_ms": 3.1813042,
+        "stdev_ms": 0.05561776480898438
+      },
+      "mode": "eager",
+      "peak_memory_mb": 651.09375,
+      "runtime_metadata": {},
+      "sequence_length": 128,
+      "setup_ms": 0.001,
+      "status": "ok",
+      "throughput_tokens_per_second": 41064.63202536652
+    },
+    {
+      "batch_size": 1,
+      "cold_start_ms": 142.776125,
+      "correctness_max_abs_error": 1.3113021850585938e-06,
+      "device": "cpu",
+      "dtype": "float32",
+      "error": null,
+      "latency": {
+        "max_ms": 3.163292,
+        "mean_ms": 3.0384333999999997,
+        "min_ms": 2.906958,
+        "p50_ms": 3.0513335,
+        "p95_ms": 3.14702325,
+        "stdev_ms": 0.06946548747860343
+      },
+      "mode": "compile",
+      "peak_memory_mb": 655.546875,
+      "runtime_metadata": {
+        "backend": "inductor",
+        "compile_mode": "default",
+        "dynamic": false,
+        "fullgraph": false
+      },
+      "sequence_length": 128,
+      "setup_ms": 0.653708,
+      "status": "ok",
+      "throughput_tokens_per_second": 42126.97240624067
+    },
+    {
+      "batch_size": 1,
+      "cold_start_ms": 3.633458,
+      "correctness_max_abs_error": 1.430511474609375e-06,
+      "device": "cpu",
+      "dtype": "float32",
+      "error": null,
+      "latency": {
+        "max_ms": 3.45675,
+        "mean_ms": 3.32628755,
+        "min_ms": 3.23425,
+        "p50_ms": 3.3212295000000003,
+        "p95_ms": 3.3771875000000007,
+        "stdev_ms": 0.04410699717559002
+      },
+      "mode": "onnx",
+      "peak_memory_mb": 655.546875,
+      "runtime_metadata": {
+        "dynamic": false,
+        "model_path": "results/cpu-warm-cache/artifacts/onnx-b1-s128/model.onnx",
+        "providers": [
+          "CPUExecutionProvider"
+        ],
+        "timing_scope": "session.run with NumPy host input/output"
+      },
+      "sequence_length": 128,
+      "setup_ms": 845.747375,
+      "status": "ok",
+      "throughput_tokens_per_second": 38481.33935383909
+    },
+    {
+      "batch_size": 1,
+      "cold_start_ms": 5.920417,
+      "correctness_max_abs_error": 0.0,
+      "device": "cpu",
+      "dtype": "float32",
+      "error": null,
+      "latency": {
+        "max_ms": 5.425458,
+        "mean_ms": 5.34815425,
+        "min_ms": 5.227625,
+        "p50_ms": 5.3511875,
+        "p95_ms": 5.41995655,
+        "stdev_ms": 0.055922356988842105
+      },
+      "mode": "eager",
+      "peak_memory_mb": 691.0625,
+      "runtime_metadata": {},
+      "sequence_length": 256,
+      "setup_ms": 0.000833,
+      "status": "ok",
+      "throughput_tokens_per_second": 47866.981398302036
+    },
+    {
+      "batch_size": 1,
+      "cold_start_ms": 147.823084,
+      "correctness_max_abs_error": 1.3709068298339844e-06,
+      "device": "cpu",
+      "dtype": "float32",
+      "error": null,
+      "latency": {
+        "max_ms": 4.374875,
+        "mean_ms": 4.27077285,
+        "min_ms": 4.177042,
+        "p50_ms": 4.276854,
+        "p95_ms": 4.362445200000001,
+        "stdev_ms": 0.05144722288547273
+      },
+      "mode": "compile",
+      "peak_memory_mb": 724.96875,
+      "runtime_metadata": {
+        "backend": "inductor",
+        "compile_mode": "default",
+        "dynamic": false,
+        "fullgraph": false
+      },
+      "sequence_length": 256,
+      "setup_ms": 0.601416,
+      "status": "ok",
+      "throughput_tokens_per_second": 59942.31231473713
+    },
+    {
+      "batch_size": 1,
+      "cold_start_ms": 6.992541,
+      "correctness_max_abs_error": 1.430511474609375e-06,
+      "device": "cpu",
+      "dtype": "float32",
+      "error": null,
+      "latency": {
+        "max_ms": 6.660833,
+        "mean_ms": 6.59812915,
+        "min_ms": 6.522542,
+        "p50_ms": 6.6021045,
+        "p95_ms": 6.65814165,
+        "stdev_ms": 0.04378059686810474
+      },
+      "mode": "onnx",
+      "peak_memory_mb": 757.65625,
+      "runtime_metadata": {
+        "dynamic": false,
+        "model_path": "results/cpu-warm-cache/artifacts/onnx-b1-s256/model.onnx",
+        "providers": [
+          "CPUExecutionProvider"
+        ],
+        "timing_scope": "session.run with NumPy host input/output"
+      },
+      "sequence_length": 256,
+      "setup_ms": 789.304,
+      "status": "ok",
+      "throughput_tokens_per_second": 38798.87679979711
+    },
+    {
+      "batch_size": 4,
+      "cold_start_ms": 5.421209,
+      "correctness_max_abs_error": 0.0,
+      "device": "cpu",
+      "dtype": "float32",
+      "error": null,
+      "latency": {
+        "max_ms": 5.155583,
+        "mean_ms": 4.9990813,
+        "min_ms": 4.871875,
+        "p50_ms": 5.004771,
+        "p95_ms": 5.1300128,
+        "stdev_ms": 0.07368566801156105
+      },
+      "mode": "eager",
+      "peak_memory_mb": 766.28125,
+      "runtime_metadata": {},
+      "sequence_length": 64,
+      "setup_ms": 0.000542,
+      "status": "ok",
+      "throughput_tokens_per_second": 51209.4092168495
+    },
+    {
+      "batch_size": 4,
+      "cold_start_ms": 134.187292,
+      "correctness_max_abs_error": 1.3709068298339844e-06,
+      "device": "cpu",
+      "dtype": "float32",
+      "error": null,
+      "latency": {
+        "max_ms": 4.101959,
+        "mean_ms": 4.0012916,
+        "min_ms": 3.898834,
+        "p50_ms": 4.005625,
+        "p95_ms": 4.058851799999999,
+        "stdev_ms": 0.042400884951142234
+      },
+      "mode": "compile",
+      "peak_memory_mb": 766.5,
+      "runtime_metadata": {
+        "backend": "inductor",
+        "compile_mode": "default",
+        "dynamic": false,
+        "fullgraph": false
+      },
+      "sequence_length": 64,
+      "setup_ms": 0.623042,
+      "status": "ok",
+      "throughput_tokens_per_second": 63979.34107076825
+    },
+    {
+      "batch_size": 4,
+      "cold_start_ms": 6.545208,
+      "correctness_max_abs_error": 1.4901161193847656e-06,
+      "device": "cpu",
+      "dtype": "float32",
+      "error": null,
+      "latency": {
+        "max_ms": 6.22225,
+        "mean_ms": 6.09239375,
+        "min_ms": 5.892042,
+        "p50_ms": 6.1300004999999995,
+        "p95_ms": 6.1825077,
+        "stdev_ms": 0.1011066396360174
+      },
+      "mode": "onnx",
+      "peak_memory_mb": 766.5,
+      "runtime_metadata": {
+        "dynamic": false,
+        "model_path": "results/cpu-warm-cache/artifacts/onnx-b4-s64/model.onnx",
+        "providers": [
+          "CPUExecutionProvider"
+        ],
+        "timing_scope": "session.run with NumPy host input/output"
+      },
+      "sequence_length": 64,
+      "setup_ms": 853.199041,
+      "status": "ok",
+      "throughput_tokens_per_second": 42019.60846670489
+    },
+    {
+      "batch_size": 4,
+      "cold_start_ms": 8.665125,
+      "correctness_max_abs_error": 0.0,
+      "device": "cpu",
+      "dtype": "float32",
+      "error": null,
+      "latency": {
+        "max_ms": 6.765792,
+        "mean_ms": 6.441687450000001,
+        "min_ms": 6.332958,
+        "p50_ms": 6.420291499999999,
+        "p95_ms": 6.54285835,
+        "stdev_ms": 0.092613140079837
+      },
+      "mode": "eager",
+      "peak_memory_mb": 861.078125,
+      "runtime_metadata": {},
+      "sequence_length": 128,
+      "setup_ms": 0.000833,
+      "status": "ok",
+      "throughput_tokens_per_second": 79482.2791347941
+    },
+    {
+      "batch_size": 4,
+      "cold_start_ms": 149.955958,
+      "correctness_max_abs_error": 1.430511474609375e-06,
+      "device": "cpu",
+      "dtype": "float32",
+      "error": null,
+      "latency": {
+        "max_ms": 6.529875,
+        "mean_ms": 5.59373755,
+        "min_ms": 5.433334,
+        "p50_ms": 5.5459795,
+        "p95_ms": 5.734526450000001,
+        "stdev_ms": 0.2262186378156041
+      },
+      "mode": "compile",
+      "peak_memory_mb": 886.15625,
+      "runtime_metadata": {
+        "backend": "inductor",
+        "compile_mode": "default",
+        "dynamic": false,
+        "fullgraph": false
+      },
+      "sequence_length": 128,
+      "setup_ms": 0.555916,
+      "status": "ok",
+      "throughput_tokens_per_second": 91530.92997722069
+    },
+    {
+      "batch_size": 4,
+      "cold_start_ms": 11.790583,
+      "correctness_max_abs_error": 1.7285346984863281e-06,
+      "device": "cpu",
+      "dtype": "float32",
+      "error": null,
+      "latency": {
+        "max_ms": 11.112584,
+        "mean_ms": 10.91913965,
+        "min_ms": 10.791833,
+        "p50_ms": 10.860896,
+        "p95_ms": 11.10672535,
+        "stdev_ms": 0.11272390422367173
+      },
+      "mode": "onnx",
+      "peak_memory_mb": 886.15625,
+      "runtime_metadata": {
+        "dynamic": false,
+        "model_path": "results/cpu-warm-cache/artifacts/onnx-b4-s128/model.onnx",
+        "providers": [
+          "CPUExecutionProvider"
+        ],
+        "timing_scope": "session.run with NumPy host input/output"
+      },
+      "sequence_length": 128,
+      "setup_ms": 868.885292,
+      "status": "ok",
+      "throughput_tokens_per_second": 46890.14120265419
+    },
+    {
+      "batch_size": 4,
+      "cold_start_ms": 12.191125,
+      "correctness_max_abs_error": 0.0,
+      "device": "cpu",
+      "dtype": "float32",
+      "error": null,
+      "latency": {
+        "max_ms": 11.043917,
+        "mean_ms": 10.81504595,
+        "min_ms": 10.619958,
+        "p50_ms": 10.7871875,
+        "p95_ms": 11.01905835,
+        "stdev_ms": 0.11625310289083678
+      },
+      "mode": "eager",
+      "peak_memory_mb": 997.328125,
+      "runtime_metadata": {},
+      "sequence_length": 256,
+      "setup_ms": 0.0005,
+      "status": "ok",
+      "throughput_tokens_per_second": 94682.90793531026
+    },
+    {
+      "batch_size": 4,
+      "cold_start_ms": 155.655709,
+      "correctness_max_abs_error": 1.6987323760986328e-06,
+      "device": "cpu",
+      "dtype": "float32",
+      "error": null,
+      "latency": {
+        "max_ms": 10.554416,
+        "mean_ms": 9.65616875,
+        "min_ms": 9.487792,
+        "p50_ms": 9.591646,
+        "p95_ms": 9.833327050000001,
+        "stdev_ms": 0.2237363872006238
+      },
+      "mode": "compile",
+      "peak_memory_mb": 1002.734375,
+      "runtime_metadata": {
+        "backend": "inductor",
+        "compile_mode": "default",
+        "dynamic": false,
+        "fullgraph": false
+      },
+      "sequence_length": 256,
+      "setup_ms": 0.54575,
+      "status": "ok",
+      "throughput_tokens_per_second": 106046.19974148649
+    },
+    {
+      "batch_size": 4,
+      "cold_start_ms": 23.052041,
+      "correctness_max_abs_error": 1.7881393432617188e-06,
+      "device": "cpu",
+      "dtype": "float32",
+      "error": null,
+      "latency": {
+        "max_ms": 23.001292,
+        "mean_ms": 22.855439699999998,
+        "min_ms": 22.61325,
+        "p50_ms": 22.842292,
+        "p95_ms": 22.99511605,
+        "stdev_ms": 0.08859312089722296
+      },
+      "mode": "onnx",
+      "peak_memory_mb": 1083.75,
+      "runtime_metadata": {
+        "dynamic": false,
+        "model_path": "results/cpu-warm-cache/artifacts/onnx-b4-s256/model.onnx",
+        "providers": [
+          "CPUExecutionProvider"
+        ],
+        "timing_scope": "session.run with NumPy host input/output"
+      },
+      "sequence_length": 256,
+      "setup_ms": 789.918875,
+      "status": "ok",
+      "throughput_tokens_per_second": 44803.33843675736
+    }
+  ],
+  "schema_version": 1,
+  "suite": {
+    "benchmark": {
+      "batch_sizes": [
+        1,
+        4
+      ],
+      "benchmark_iterations": 20,
+      "compile_mode": "default",
+      "correctness_atol": 0.0001,
+      "correctness_rtol": 0.001,
+      "device": "cpu",
+      "dtype": "float32",
+      "dynamic": false,
+      "fullgraph": false,
+      "modes": [
+        "eager",
+        "compile",
+        "onnx"
+      ],
+      "seed": 7,
+      "sequence_lengths": [
+        64,
+        128,
+        256
+      ],
+      "warmup_iterations": 5
+    },
+    "model": {
+      "d_model": 256,
+      "max_seq_len": 256,
+      "mlp_ratio": 4.0,
+      "n_heads": 8,
+      "n_layers": 4,
+      "rms_norm_eps": 1e-05,
+      "vocab_size": 8192
+    },
+    "name": "cpu-runtime-comparison"
+  },
+  "system": {
+    "cpu_count": 14,
+    "cpu_model": "arm",
+    "device": "cpu",
+    "git_revision": null,
+    "numpy": "2.5.1",
+    "onnxruntime": "1.27.0",
+    "onnxruntime_providers": [
+      "CoreMLExecutionProvider",
+      "AzureExecutionProvider",
+      "CPUExecutionProvider"
+    ],
+    "platform": "macOS-26.5.1-arm64-arm-64bit",
+    "python": "3.12.13",
+    "torch": "2.13.0",
+    "triton": null
+  }
+}
