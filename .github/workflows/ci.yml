@@ -19,7 +19,7 @@ jobs:
       - name: Install CPU PyTorch
         run: pip install --index-url https://download.pytorch.org/whl/cpu torch
       - name: Install project
-        run: pip install -e ".[dev]"
+        run: pip install -e ".[dev,viz]"
       - name: Lint
         run: python -m ruff check src tests
       - name: Format check
