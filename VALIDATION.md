@@ -1,21 +1,22 @@
-# Validation Status
+## Validation environments
 
-Validated on July 24, 2026 in a Linux CPU container with Python 3.13.5 and PyTorch 2.10.0+cpu.
+### Linux CPU container
 
-## Executed successfully
+The Linux CPU container was used to validate installation, command-line behavior, configuration loading, core benchmark execution, static analysis, formatting, and automated tests across the supported Python versions.
 
-- 10 unit and smoke tests.
-- Eager transformer inference benchmark.
-- `torch.compile` / TorchInductor CPU smoke benchmark.
-- TorchDynamo graph-break diagnosis and tensor-only correction.
-- Dynamic-shape experiment using one compiled model across repeated sequence lengths.
-- PyTorch Profiler trace and operator summary generation.
-- JSON, CSV, Markdown, and chart generation.
-- Editable package installation with local build isolation disabled in the restricted validation environment.
+ONNX Runtime benchmarking and Apple-specific performance measurements were not performed in this environment.
 
-## Not executed in this environment
+### Apple M3 Max CPU
 
-- ONNX export and ONNX Runtime execution, because ONNX dependencies were unavailable.
-- Triton RMSNorm execution, because no CUDA device or Triton installation was available.
+The Apple Silicon environment was used for the complete measured benchmark suite, including:
 
-Those paths are capability-gated and produce explicit errors or `skipped` benchmark records rather than fabricated results. Run them on the intended CPU/GPU environment before using their metrics publicly.
+* Eager PyTorch inference
+* `torch.compile` and TorchInductor inference
+* ONNX Runtime inference
+* Cold-cache and warm-cache compilation experiments
+* TorchDynamo graph-break diagnosis
+* Dynamic-shape graph-reuse analysis
+* PyTorch Profiler analysis
+* Correctness comparison across runtime implementations
+
+The corresponding reports, CSV files, JSON files, charts, profiler summary, and environment metadata are committed under `results/apple-silicon-cpu`.
