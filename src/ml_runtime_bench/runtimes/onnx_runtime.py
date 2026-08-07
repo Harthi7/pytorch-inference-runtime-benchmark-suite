@@ -20,6 +20,7 @@ class OnnxRuntime(RuntimeAdapter):
         self.input_name = "input_ids"
         self.output_name = "logits"
         self.providers: list[str] = []
+        self.provider_options: list[dict[str, str]] = []
         self.model_path: Path | None = None
         self.device = torch.device("cpu")
 
@@ -73,15 +74,21 @@ class OnnxRuntime(RuntimeAdapter):
                     "install onnxruntime-gpu and verify provider availability"
                 )
             self.providers = ["CUDAExecutionProvider", "CPUExecutionProvider"]
+            # Match the project\'s PyTorch FP32 baseline, which runs with TF32 disabled.
+            self.provider_options = [{"use_tf32": "0"}, {}]
         elif sample_input.device.type == "cpu":
             self.providers = ["CPUExecutionProvider"]
+            self.provider_options = [{}]
         else:
             raise RuntimeError(
                 f"ONNX Runtime comparison is not supported for device {sample_input.device.type}"
             )
 
         self.session = ort.InferenceSession(
-            str(self.model_path), sess_options=options, providers=self.providers
+            str(self.model_path),
+            sess_options=options,
+            providers=self.providers,
+            provider_options=self.provider_options,
         )
 
     def run(self, input_ids: torch.Tensor) -> torch.Tensor:
@@ -95,6 +102,7 @@ class OnnxRuntime(RuntimeAdapter):
     def metadata(self) -> dict[str, Any]:
         return {
             "providers": self.providers,
+            "provider_options": self.provider_options,
             "dynamic": self.dynamic,
             "timing_scope": "session.run with NumPy host input/output",
             "model_path": str(self.model_path) if self.model_path else None,

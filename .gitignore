@@ -18,3 +18,13 @@ artifacts/
 *.pth
 .benchmark-cache/
 .coverage
+!results/rtx-5070-ti/
+results/rtx-5070-ti/*
+!results/rtx-5070-ti/final/
+!results/rtx-5070-ti/final/**
+!results/rtx-5070-ti/profile-fp16-b4-s256-eager/
+results/rtx-5070-ti/profile-fp16-b4-s256-eager/*
+!results/rtx-5070-ti/profile-fp16-b4-s256-eager/top_ops.txt
+!results/rtx-5070-ti/profile-fp16-b4-s256-compile/
+results/rtx-5070-ti/profile-fp16-b4-s256-compile/*
+!results/rtx-5070-ti/profile-fp16-b4-s256-compile/top_ops.txt

@@ -1,0 +1,33 @@
+{
+  "name": "rtx-5070-ti-bf16-oracle-check",
+  "model": {
+    "vocab_size": 16384,
+    "max_seq_len": 512,
+    "d_model": 512,
+    "n_heads": 8,
+    "n_layers": 6,
+    "mlp_ratio": 4.0
+  },
+  "benchmark": {
+    "batch_sizes": [
+      1
+    ],
+    "sequence_lengths": [
+      64
+    ],
+    "modes": [
+      "eager",
+      "compile"
+    ],
+    "device": "cuda",
+    "dtype": "bfloat16",
+    "warmup_iterations": 5,
+    "benchmark_iterations": 10,
+    "compile_mode": "max-autotune",
+    "fullgraph": false,
+    "dynamic": false,
+    "correctness_atol": 0.01,
+    "correctness_rtol": 0.01,
+    "seed": 7
+  }
+}

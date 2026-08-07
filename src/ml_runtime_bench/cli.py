@@ -55,6 +55,16 @@ def build_parser() -> argparse.ArgumentParser:
     profile.add_argument("--sequence-length", type=int, default=128)
     profile.add_argument("--warmup-iterations", type=int, default=3)
     profile.add_argument("--profile-iterations", type=int, default=5)
+    profile.add_argument(
+        "--compile-mode",
+        choices=["default", "reduce-overhead", "max-autotune", "max-autotune-no-cudagraphs"],
+        default="default",
+    )
+    profile.add_argument(
+        "--dynamic",
+        action=argparse.BooleanOptionalAction,
+        default=None,
+    )
     profile.add_argument("--output", required=True, type=Path)
     _add_common_model_arguments(profile)
 
@@ -113,6 +123,8 @@ def main() -> None:
             warmup_iterations=args.warmup_iterations,
             profile_iterations=args.profile_iterations,
             output_dir=args.output,
+            compile_mode=args.compile_mode,
+            dynamic=args.dynamic,
         )
         print(f"Wrote profiler outputs to {args.output}")
         return

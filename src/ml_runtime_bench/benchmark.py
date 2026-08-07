@@ -37,6 +37,19 @@ class LatencySummary:
     stdev_ms: float
 
 
+@dataclass(frozen=True)
+class CorrectnessAssessment:
+    parity_max_abs_error: float
+    parity_passed: bool
+    accuracy_reference_dtype: str
+    accuracy_max_abs_error: float
+    accuracy_mean_abs_error: float
+    accuracy_rmse: float
+    eager_accuracy_rmse: float
+    argmax_match: float | None
+    acceptable: bool
+
+
 @dataclass
 class BenchmarkResult:
     status: str
@@ -51,6 +64,13 @@ class BenchmarkResult:
     throughput_tokens_per_second: float | None = None
     peak_memory_mb: float | None = None
     correctness_max_abs_error: float | None = None
+    correctness_parity_passed: bool | None = None
+    correctness_accuracy_reference_dtype: str | None = None
+    correctness_accuracy_max_abs_error: float | None = None
+    correctness_accuracy_mean_abs_error: float | None = None
+    correctness_accuracy_rmse: float | None = None
+    correctness_eager_accuracy_rmse: float | None = None
+    correctness_argmax_match: float | None = None
     runtime_metadata: dict[str, Any] | None = None
     error: str | None = None
 
@@ -80,6 +100,70 @@ def summarize_latencies(values_ms: list[float]) -> LatencySummary:
         min_ms=min(values_ms),
         max_ms=max(values_ms),
         stdev_ms=statistics.pstdev(values_ms),
+    )
+
+
+def assess_correctness(
+    candidate: torch.Tensor,
+    eager_reference: torch.Tensor,
+    accuracy_reference: torch.Tensor,
+    *,
+    atol: float,
+    rtol: float,
+    accuracy_reference_dtype: str,
+) -> CorrectnessAssessment:
+    """Assess implementation parity and numerical accuracy separately.
+
+    Eager execution in the benchmark dtype is the implementation-parity reference.
+    For reduced precision, a higher-precision FP32 execution of the same rounded
+    weights is the numerical-accuracy reference.
+
+    If parity fails, a candidate is accepted only when its RMSE against the
+    higher-precision reference is no worse than eager's RMSE against that same
+    reference. This mirrors PyTorch compiler debugging's third-reference approach
+    without loosening the configured eager-parity tolerances.
+    """
+    candidate_f32 = candidate.detach().float().cpu()
+    eager_f32 = eager_reference.detach().float().cpu()
+    accuracy_f32 = accuracy_reference.detach().float().cpu()
+
+    parity_diff = (candidate_f32 - eager_f32).abs()
+    parity_max_abs_error = float(parity_diff.max().item())
+    parity_passed = bool(
+        torch.allclose(
+            candidate_f32,
+            eager_f32,
+            atol=atol,
+            rtol=rtol,
+        )
+    )
+
+    accuracy_diff = (candidate_f32 - accuracy_f32).abs()
+    eager_accuracy_diff = (eager_f32 - accuracy_f32).abs()
+
+    accuracy_max_abs_error = float(accuracy_diff.max().item())
+    accuracy_mean_abs_error = float(accuracy_diff.mean().item())
+    accuracy_rmse = float(accuracy_diff.square().mean().sqrt().item())
+    eager_accuracy_rmse = float(eager_accuracy_diff.square().mean().sqrt().item())
+
+    argmax_match: float | None = None
+    if candidate.ndim > 0 and candidate.shape[-1] > 1:
+        argmax_match = float(
+            (candidate_f32.argmax(dim=-1) == accuracy_f32.argmax(dim=-1)).float().mean().item()
+        )
+
+    acceptable = parity_passed or accuracy_rmse <= eager_accuracy_rmse
+
+    return CorrectnessAssessment(
+        parity_max_abs_error=parity_max_abs_error,
+        parity_passed=parity_passed,
+        accuracy_reference_dtype=accuracy_reference_dtype,
+        accuracy_max_abs_error=accuracy_max_abs_error,
+        accuracy_mean_abs_error=accuracy_mean_abs_error,
+        accuracy_rmse=accuracy_rmse,
+        eager_accuracy_rmse=eager_accuracy_rmse,
+        argmax_match=argmax_match,
+        acceptable=acceptable,
     )
 
 
@@ -114,7 +198,9 @@ def _benchmark_one(
     mode: str,
     config: SuiteConfig,
     base_state: dict[str, torch.Tensor],
-    reference_model: TinyDecoderLM,
+    eager_reference: torch.Tensor,
+    accuracy_reference: torch.Tensor,
+    accuracy_reference_dtype: str,
     input_ids: torch.Tensor,
     artifact_dir: Path,
 ) -> BenchmarkResult:
@@ -133,16 +219,22 @@ def _benchmark_one(
     with inference_context():
         cold_ms, cold_output = _time_single_call(runtime, input_ids)
 
-        with torch.no_grad():
-            reference = reference_model(input_ids)
-        reference_for_compare = reference.to(cold_output.device)
-        max_error = float((cold_output.float() - reference_for_compare.float()).abs().max().item())
-        torch.testing.assert_close(
-            cold_output.float(),
-            reference_for_compare.float(),
+        assessment = assess_correctness(
+            cold_output,
+            eager_reference,
+            accuracy_reference,
             atol=benchmark.correctness_atol,
             rtol=benchmark.correctness_rtol,
+            accuracy_reference_dtype=accuracy_reference_dtype,
         )
+        if not assessment.acceptable:
+            raise AssertionError(
+                "candidate failed correctness: eager parity failed and candidate "
+                "RMSE against the higher-precision reference was worse than eager "
+                f"(candidate={assessment.accuracy_rmse:.9f}, "
+                f"eager={assessment.eager_accuracy_rmse:.9f}, "
+                f"reference={assessment.accuracy_reference_dtype})"
+            )
 
         for _ in range(benchmark.warmup_iterations):
             runtime.run(input_ids)
@@ -168,7 +260,14 @@ def _benchmark_one(
         latency=latency,
         throughput_tokens_per_second=throughput,
         peak_memory_mb=peak_memory_mb(device),
-        correctness_max_abs_error=max_error,
+        correctness_max_abs_error=assessment.parity_max_abs_error,
+        correctness_parity_passed=assessment.parity_passed,
+        correctness_accuracy_reference_dtype=assessment.accuracy_reference_dtype,
+        correctness_accuracy_max_abs_error=assessment.accuracy_max_abs_error,
+        correctness_accuracy_mean_abs_error=assessment.accuracy_mean_abs_error,
+        correctness_accuracy_rmse=assessment.accuracy_rmse,
+        correctness_eager_accuracy_rmse=assessment.eager_accuracy_rmse,
+        correctness_argmax_match=assessment.argmax_match,
         runtime_metadata=runtime.metadata(),
     )
 
@@ -196,6 +295,25 @@ def run_suite(config: SuiteConfig, output_dir: Path, *, strict: bool = False) ->
             reference_model = TinyDecoderLM(config.model).to(device=device, dtype=dtype).eval()
             reference_model.load_state_dict(copy.deepcopy(base_state))
 
+            accuracy_dtype = torch.float32 if dtype in {torch.float16, torch.bfloat16} else dtype
+            accuracy_reference_dtype = str(accuracy_dtype).removeprefix("torch.")
+
+            with inference_context():
+                eager_reference = reference_model(input_ids)
+                if accuracy_dtype == dtype:
+                    accuracy_reference = eager_reference
+                else:
+                    accuracy_model = (
+                        TinyDecoderLM(config.model).to(device=device, dtype=accuracy_dtype).eval()
+                    )
+                    # Preserve the reduced-precision rounded weights while
+                    # increasing only the arithmetic precision of the oracle.
+                    accuracy_model.load_state_dict(copy.deepcopy(base_state))
+                    accuracy_reference = accuracy_model(input_ids)
+                    del accuracy_model
+            synchronize(device)
+            del reference_model
+
             for mode in config.benchmark.modes:
                 artifact_dir = output_dir / "artifacts" / f"{mode}-b{batch_size}-s{sequence_length}"
                 try:
@@ -203,7 +321,9 @@ def run_suite(config: SuiteConfig, output_dir: Path, *, strict: bool = False) ->
                         mode=mode,
                         config=config,
                         base_state=base_state,
-                        reference_model=reference_model,
+                        eager_reference=eager_reference,
+                        accuracy_reference=accuracy_reference,
+                        accuracy_reference_dtype=accuracy_reference_dtype,
                         input_ids=input_ids,
                         artifact_dir=artifact_dir,
                     )

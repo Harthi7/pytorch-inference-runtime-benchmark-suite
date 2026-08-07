@@ -245,5 +245,57 @@ See:
 - [Detailed CPU analysis](docs/cpu-findings.md)
 - [Reproducible benchmark artifacts](results/apple-silicon-cpu)
 
-These CPU measurements do not represent CUDA or Triton performance. GPU
-benchmarking remains future work.
+These CPU measurements are separate from the CUDA study below and should not
+be generalized across devices.
+
+## Measured RTX 5070 Ti CUDA results
+
+The CUDA study was run on an NVIDIA GeForce RTX 5070 Ti with PyTorch
+`2.13.0+cu130`, ONNX Runtime `1.27.0`, and Triton `3.7.1`. The main
+TorchInductor comparison uses static shapes, `max-autotune`, synchronized
+timing, and three warm-cache repetitions per shape. Final speedups are the
+median of the three paired eager/compiled ratios.
+
+Across 12 batch/sequence shapes:
+
+- FP16 TorchInductor speedup: **1.42x-4.36x** over eager.
+- BF16 TorchInductor speedup: **1.49x-4.25x** over eager.
+- FP32 TorchInductor speedup: **1.05x-2.17x** over eager.
+
+The BF16 study exposed an important numerical-methodology issue. TorchInductor
+did not match eager BF16 bit-for-bit on these workloads, so reduced-precision
+accuracy was also evaluated against the same BF16-rounded model weights
+executed in FP32. The candidate was accepted only when its RMSE against that
+higher-precision reference was no worse than eager BF16 against the same
+reference. Argmax agreement is reported as a diagnostic, not as the primary
+correctness criterion.
+
+ONNX Runtime CUDA initially failed the strict FP32 comparison because its CUDA
+Execution Provider enabled TF32 while the PyTorch FP32 baseline did not. After
+setting `use_tf32=0` for the CUDA provider, ONNX Runtime restored strict parity
+with worst max absolute error of approximately `5e-6` across the final runs.
+Under the current end-to-end `session.run` measurement, including NumPy
+host/device I/O, ONNX Runtime achieved **0.42x-0.89x** the eager FP32 speed and
+was slower on all 12 tested shapes.
+
+The standalone FP16 Triton RMSNorm experiment produced median speedups of:
+
+- hidden size 1024: **2.41x**
+- hidden size 2048: **2.52x**
+- hidden size 4096: **2.94x**
+
+with maximum absolute error `0.0078125` in each final repetition.
+
+A representative FP16 B=4, S=256 profiler comparison shows eager execution
+spending substantial CUDA time in separate GEMM/CUTLASS and elementwise
+kernels, while TorchInductor emits fused Triton regions around the same
+workload. Compiler autotuning logs are preserved separately from the
+steady-state profiler window.
+
+See:
+
+- [Detailed RTX 5070 Ti findings](docs/gpu-findings.md)
+- [Curated RTX 5070 Ti report](results/rtx-5070-ti/final/report.md)
+- [TorchInductor speedup chart](results/rtx-5070-ti/final/charts/torchinductor_speedup_by_dtype.png)
+- [ONNX Runtime CUDA chart](results/rtx-5070-ti/final/charts/onnx_fp32_vs_eager.png)
+- [Triton RMSNorm chart](results/rtx-5070-ti/final/charts/triton_rmsnorm_speedup.png)

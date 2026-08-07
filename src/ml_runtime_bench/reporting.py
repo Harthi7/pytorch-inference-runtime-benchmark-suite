@@ -30,6 +30,13 @@ def _flatten_result(result: dict[str, Any]) -> dict[str, Any]:
         "throughput_tokens_per_second": result.get("throughput_tokens_per_second"),
         "peak_memory_mb": result.get("peak_memory_mb"),
         "correctness_max_abs_error": result.get("correctness_max_abs_error"),
+        "correctness_parity_passed": result.get("correctness_parity_passed"),
+        "correctness_accuracy_reference_dtype": result.get("correctness_accuracy_reference_dtype"),
+        "correctness_accuracy_max_abs_error": result.get("correctness_accuracy_max_abs_error"),
+        "correctness_accuracy_mean_abs_error": result.get("correctness_accuracy_mean_abs_error"),
+        "correctness_accuracy_rmse": result.get("correctness_accuracy_rmse"),
+        "correctness_eager_accuracy_rmse": result.get("correctness_eager_accuracy_rmse"),
+        "correctness_argmax_match": result.get("correctness_argmax_match"),
         "error": result.get("error"),
     }
     return row
@@ -110,13 +117,13 @@ def render_markdown(payload: dict[str, Any]) -> str:
         "",
         "## Results",
         "",
-        "| Status | Mode | Batch | Sequence | Setup ms | Cold ms | p50 ms | p95 ms | Tokens/s | Peak MB | Max abs error |",
-        "|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|",
+        "| Status | Mode | Batch | Sequence | Setup ms | Cold ms | p50 ms | p95 ms | Tokens/s | Peak MB | Max abs vs eager | Parity | RMSE vs accuracy ref | Argmax vs ref |",
+        "|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|",
     ]
     for result in payload["results"]:
         latency = result.get("latency") or {}
         lines.append(
-            "| {status} | {mode} | {batch} | {sequence} | {setup} | {cold} | {p50} | {p95} | {throughput} | {memory} | {error} |".format(
+            "| {status} | {mode} | {batch} | {sequence} | {setup} | {cold} | {p50} | {p95} | {throughput} | {memory} | {error} | {parity} | {accuracy_rmse} | {argmax_match} |".format(
                 status=result.get("status"),
                 mode=result.get("mode"),
                 batch=result.get("batch_size"),
@@ -128,6 +135,13 @@ def render_markdown(payload: dict[str, Any]) -> str:
                 throughput=_fmt(result.get("throughput_tokens_per_second"), 0),
                 memory=_fmt(result.get("peak_memory_mb")),
                 error=_fmt(result.get("correctness_max_abs_error"), 6),
+                parity=_fmt(result.get("correctness_parity_passed")),
+                accuracy_rmse=_fmt(result.get("correctness_accuracy_rmse"), 6),
+                argmax_match=(
+                    _fmt(result.get("correctness_argmax_match") * 100, 2) + "%"
+                    if result.get("correctness_argmax_match") is not None
+                    else "—"
+                ),
             )
         )
     lines.extend(["", "## Comparisons", ""])
@@ -151,6 +165,10 @@ def render_markdown(payload: dict[str, Any]) -> str:
             "- Setup and cold-start costs are reported separately from steady-state latency.",
             "- Token throughput is input tokens processed by a full forward/prefill pass, not generated tokens per second.",
             "- ONNX Runtime timing includes NumPy host input/output for `session.run`.",
+            "- `Max abs vs eager` and `Parity` measure implementation parity against eager execution in the benchmark dtype.",
+            "- For FP16/BF16, numerical accuracy is also measured against the same rounded model weights executed in FP32.",
+            "- If reduced-precision eager parity fails, a candidate is accepted only when its RMSE against the FP32 reference is no worse than eager's RMSE against that same reference.",
+            "- Argmax agreement is reported as a diagnostic only; this synthetic model is for runtime experiments, not model-quality evaluation.",
             "- These results apply only to the recorded hardware, software versions, shapes, and dtype.",
             "",
         ]

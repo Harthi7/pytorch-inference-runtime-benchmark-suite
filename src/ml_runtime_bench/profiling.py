@@ -29,6 +29,8 @@ def run_profile(
     warmup_iterations: int,
     profile_iterations: int,
     output_dir: Path,
+    compile_mode: str = "default",
+    dynamic: bool | None = None,
     seed: int = 7,
 ) -> None:
     if mode not in {"eager", "compile"}:
@@ -43,7 +45,11 @@ def run_profile(
     input_ids = torch.randint(
         0, model_config.vocab_size, (batch_size, sequence_length), device=device
     )
-    runtime = EagerRuntime() if mode == "eager" else CompileRuntime()
+    runtime = (
+        EagerRuntime()
+        if mode == "eager"
+        else CompileRuntime(compile_mode=compile_mode, dynamic=dynamic)
+    )
     runtime.prepare(copy.deepcopy(model), input_ids, output_dir / "artifacts")
 
     with inference_context():
@@ -70,4 +76,7 @@ def run_profile(
     profiler.export_chrome_trace(str(output_dir / "trace.json"))
     sort_key = "self_cuda_time_total" if device.type == "cuda" else "self_cpu_time_total"
     table = profiler.key_averages(group_by_input_shape=True).table(sort_by=sort_key, row_limit=40)
-    (output_dir / "top_ops.txt").write_text(table, encoding="utf-8")
+    (output_dir / "top_ops.txt").write_text(
+        "\n".join(line.rstrip() for line in table.splitlines()) + "\n",
+        encoding="utf-8",
+    )

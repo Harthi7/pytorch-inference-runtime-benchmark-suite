@@ -27,12 +27,14 @@ class CompileRuntime(RuntimeAdapter):
 
     def prepare(self, model: nn.Module, sample_input: torch.Tensor, artifact_dir: Path) -> None:
         del sample_input, artifact_dir
-        compiled_model = torch.compile(
+        compile_fn = cast(Callable[..., Any], torch.compile)
+        compiled_model = compile_fn(
             model,
             backend="inductor",
             mode=self.compile_mode,
             fullgraph=self.fullgraph,
             dynamic=self.dynamic,
+            isolate_recompiles=True,
         )
         self.model = cast(
             Callable[[torch.Tensor], torch.Tensor],
